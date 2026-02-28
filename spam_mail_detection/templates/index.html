@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="tr" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>Ana Sayfa</title>
+  <script src="https://kit.fontawesome.com/47101d2035.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <style>
+    .center {
+      position: absolute;
+      text-align: center;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: rgb(230, 239, 245);
+    }
+  </style>
+</head>
+
+<body class="center">
+  {% load i18n %}
+
+<h1 style="color:rgb(44, 44, 90); font-weight: 700;">
+    <i class="fas fa-ship"></i> {% trans "Spam Maili Algılama Aracı" %}
+</h1>
+
+<p style="color:rgb(51, 51, 83); font-weight: 700;">
+    {% trans "Bu mail spam mail mi inceleyip görelim!" %}
+</p>
+<p>{% trans "Current Language:" %} {{ LANGUAGE_CODE }}</p>
+
+<form action="{% url 'set_language' %}" method="post">
+  {% csrf_token %}
+  <div style="display: flex; justify-content: center; margin-top: 40px;">
+    <form method="post" style="display: flex; align-items: center; gap: 10px;">
+      {% csrf_token %}
+      <select name="language" class="form-select" style="width: auto;">
+        <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
+        <option value="tr" {% if LANGUAGE_CODE == 'tr' %}selected{% endif %}>Türkçe</option>
+      </select>
+      <input class="btn btn-primary btn-sm" type="submit" value="{% trans 'Change' %}" style="width: auto; padding: 12px 12px 10 px;">
+    </form>
+  </div>  
+  
+</form>
+
+
+  <form action="/result/" method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="mailTitle">{% trans "Mail Title" %}</label>
+      <input class="form-control" placeholder="{% trans "Enter mail title" %}" required type="text" name="mailTitle" id="mailTitle">
+    </div>
+    <div class="form-group">
+      <label for="mailContent">{% trans "Mail Content" %}</label>
+      <textarea class="form-control" placeholder="{% trans "Enter mail content" %}" required name="mailContent" id="mailContent" rows="4"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="mailUrl">{% trans "Mail URL" %}</label>
+      <input class="form-control" placeholder="{% trans "Mail URL (if any)" %}" required type="text" required name="mailUrl" id="mailUrl">
+    </div>
+    <div class="form-group">
+      <label for="spamFilter">{% trans "Spam Filter Selection" %}</label>
+      <select class="form-control" name="spamFilter" id="spamFilter" required>
+        <option value="">{% trans "Choose a filter" %}</option>
+        <option value="Mail Başlık" {% if spamFilter == "Mail Başlık" %}selected{% endif %}>{% trans "Mail Title" %}</option>
+        <option value="Mail İçerik" {% if spamFilter == "Mail İçerik" %}selected{% endif %}>{% trans "Mail Content" %}</option>
+        <option value="Mail Url" {% if spamFilter == "Mail Url" %}selected{% endif %}>{% trans "Mail URL" %}</option>
+        <option value="Bütün Mail" {% if spamFilter == "Bütün Mail" %}selected{% endif %}>{% trans "Entire Mail" %}</option>
+      </select>
+    </div>
+    <input class="btn btn-primary btn-lg btn-block" type="submit" value="{% trans "Predict" %}">
+  </form>
+</body>
+</html>

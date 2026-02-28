@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="tr" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Sonuç</title>
+
+  <script src="https://kit.fontawesome.com/47101d2035.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <style>
+    body {
+      background-color: #f5f8fa;
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .result-card {
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .result-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .danger {
+      color: #dc3545;
+    }
+
+    .safe {
+      color: #28a745;
+    }
+
+    .error {
+      color: #343a40;
+    }
+  </style>
+</head>
+
+<body>
+
+  {% load i18n %}
+  <div class="result-card">
+
+    {% if result == 'yes' %}
+      <div class="result-icon danger">
+        <i class="fas fa-skull-crossbones"></i>
+      </div>
+      <h2 class="danger font-weight-bold">
+        {% trans 'Spam maili tespit edildi. Güvensiz!!' %}
+      </h2>
+
+    {% elif result == 'no' %}
+      <div class="result-icon safe">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h2 class="safe font-weight-bold">
+        {% trans 'Spam mail tespit edilmedi. Güvenli!!' %}
+      </h2>
+
+    {% else %}
+      <div class="result-icon error">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h2 class="error font-weight-bold">
+        {% trans "!!Hata alındı!!" %}
+      </h2>
+    {% endif %}
+
+    {% if used_models %}
+    <hr style="margin-top: 1.5rem;">
+    <div style="text-align: left; margin-top: 1rem;">
+      <h6 style="color: #555; font-weight: 700;">{% trans "Kullanılan Modeller" %}:</h6>
+      <ul style="list-style: none; padding: 0; margin: 0;">
+        {% for model in used_models %}
+        <li style="font-size: 0.85rem; color: #444; padding: 3px 0;">
+          <i class="fas fa-microchip" style="color: #6c757d; margin-right: 6px;"></i>{{ model }}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+  </div>
+
+</body>
+
+</html>
